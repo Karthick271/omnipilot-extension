@@ -3,3 +3,20 @@
 .cp-menu{box-shadow:0 6px 20px rgba(0,0,0,.15);min-width:160px}
 .cp-menu button{background:none;border:0;cursor:pointer}
 .cp-menu button:hover{background:rgba(0,0,0,.06)}
+
+
+/* === ChatPilot docked panel fixes === */
+:root{color-scheme:light}
+.cp-scope, #cp-root{background:#fff;color:#111}
+#cp-root{display:flex;flex-direction:column;height:100vh;max-height:100vh}
+.cp-header{flex:0 0 auto;position:sticky;top:0;background:#fff;border-bottom:1px solid #e5e7eb;z-index:2}
+#cp-list{flex:1 1 auto;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding-bottom:16px}
+/* prevent double scroll */
+html, body {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+ body{height:100%;margin:0;overflow:hidden}
+/* enterprise look tweaks */
+.cp-card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+button, .cp-btn{cursor:pointer}

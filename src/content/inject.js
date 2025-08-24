@@ -1,3 +1,4 @@
+let CP_SETTINGS = { theme:'auto', panelWidth:420, fontSize:'normal', compact:false, launcher:true, float:true };
 // content/inject.js
 const HOST_ID = 'chatpilot-shadow-host';
 
@@ -6,17 +7,48 @@ function ensurePanel() {
   const host = document.createElement('div');
   host.id = HOST_ID;
   Object.assign(host.style, {
-    position: 'fixed', top: '20px', right: '20px', zIndex: 2147483646
+    position: 'fixed', top: '0px', right: '0px', bottom:'0px', zIndex: 2147483646
   });
   const shadow = host.attachShadow({ mode: 'open' });
+  const dragger = document.createElement('div');
+  dragger.id = 'cp-dragger';
+  dragger.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:28px;cursor:move;z-index:2;';
+  shadow.appendChild(dragger);
   const iframe = document.createElement('iframe');
-  iframe.src = chrome.runtime.getURL('content/panel.html');
-  iframe.style.width = 'min(96vw, 640px)';
-  iframe.style.height = 'min(86vh, 720px)';
-  iframe.style.border = '0';
+  iframe.src = chrome.runtime.getURL('content/panel.html'); iframe.id='chatpilot-frame';
+  iframe.style.width = '420px'; // default width; updated later by settings
+  iframe.style.height = '100vh';
+  iframe.style.border = '0'; iframe.style.display='block'; iframe.style.overflow='hidden';
   iframe.style.borderRadius = '16px';
   shadow.appendChild(iframe);
   document.documentElement.appendChild(host);
+  (function(){
+    let dragging=false, sx=0, sy=0, ox=0, oy=0;
+    dragger.addEventListener('mousedown', (ev)=>{
+      if (!CP_SETTINGS.float) return;
+      dragging = true;
+      sx = ev.clientX; sy = ev.clientY;
+      const r = host.getBoundingClientRect();
+      host.style.right = 'auto';
+      host.style.left = r.left + 'px';
+      host.style.top = r.top + 'px';
+      ox = r.left; oy = r.top;
+      ev.preventDefault();
+    });
+    window.addEventListener('mousemove', (ev)=>{
+      if (!dragging) return;
+      const nx = Math.min(window.innerWidth - 50, Math.max(0, ox + (ev.clientX - sx)));
+      const ny = Math.min(window.innerHeight - 50, Math.max(0, oy + (ev.clientY - sy)));
+      host.style.left = nx + 'px';
+      host.style.top  = ny + 'px';
+    });
+    window.addEventListener('mouseup', ()=> dragging=false);
+    dragger.addEventListener('dblclick', ()=>{
+      host.style.left = '';
+      host.style.top = '0px';
+      host.style.right = '0px';
+    });
+  })();
   try { chrome.runtime.sendMessage({type:'CP_PANEL_STATE', open:true}); } catch(e){}
   return host;
 }
@@ -121,7 +153,6 @@ addEventListener('message', (e) => {
 
 
 // Settings listener from panel (width + launcher visibility)
-let CP_SETTINGS = { theme:'auto', panelWidth:380, fontSize:'normal', compact:false, launcher:true };
 window.addEventListener('message', (e)=>{
   if (e?.data?.type === 'CHATPILOT_APPLY_SETTINGS') {
     CP_SETTINGS = Object.assign(CP_SETTINGS, e.data.settings || {});
@@ -132,9 +163,20 @@ window.addEventListener('message', (e)=>{
 
 function applyPanelPrefs(){
   const frame = document.getElementById('chatpilot-frame');
-  if (frame) frame.style.width = (CP_SETTINGS.panelWidth || 380) + 'px';
+  const h = document.getElementById(HOST_ID);
+  const widthPx = (CP_SETTINGS.panelWidth || 420) + 'px';
+  if (frame) frame.style.width = widthPx;
+  if (h){
+    if (CP_SETTINGS.float){
+      if (frame) frame.style.borderRadius = '16px';
+    } else {
+      if (frame) frame.style.borderRadius = '0px';
+      h.style.left = ''; 
+      h.style.top = '0px'; 
+      h.style.right = '0px';
+    }
+  }
 }
-
 function ensureLauncher(){
   let btn = document.getElementById('chatpilot-launcher');
   if (!btn){
@@ -187,7 +229,7 @@ function ensureBackdrop(){
 function setExpanded(on){
   const frame = document.getElementById('chatpilot-frame');
   const back = ensureBackdrop();
-  if (!frame) return;
+  if (!frame) { return; }
   if (on){
     back.style.display = 'block';
     frame.style.width = 'min(96vw, 1100px)';
@@ -202,13 +244,13 @@ function setExpanded(on){
   }else{
     back.style.display = 'none';
     frame.style.width = (CP_SETTINGS.panelWidth || 380) + 'px';
-    frame.style.height = 'calc(100vh - 100px)';
-    frame.style.right = '16px';
+    frame.style.height = '100vh';
+    frame.style.right = '0px';
     frame.style.transform = 'none';
-    frame.style.top = '64px';
-    frame.style.bottom = '16px';
-    frame.style.borderRadius = '12px';
-    frame.style.boxShadow = '0 10px 30px rgba(0,0,0,.35)';
+    frame.style.top = '0px';
+    frame.style.bottom = '0px';
+    frame.style.borderRadius = '0px';
+    frame.style.boxShadow = 'none';
     frame.style.zIndex = '999999';
   }
 }
@@ -234,7 +276,8 @@ window.addEventListener('message', (e) => {
     const w = Math.min(e.data.width || 380, Math.max(window.innerWidth * 0.96, 360));
     if (dock) {
       document.documentElement.style.marginRight = (e.data.width || 380) + 'px';
-      if (host) host.style.right = '0px';
+      const h = document.getElementById(HOST_ID);
+      if (h) h.style.right = '0px';
     } else {
       document.documentElement.style.marginRight = '';
     }
