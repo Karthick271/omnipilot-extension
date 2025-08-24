@@ -1,0 +1,5 @@
+
+/* quick menu */
+.cp-menu{box-shadow:0 6px 20px rgba(0,0,0,.15);min-width:160px}
+.cp-menu button{background:none;border:0;cursor:pointer}
+.cp-menu button:hover{background:rgba(0,0,0,.06)}
