@@ -1,0 +1,153 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" href="../styles/panel.css"/>
+  </head>
+  <body class=\"cp-scope\">
+    <div id="cp-root">
+      <header class="cp-header">
+        <div class="cp-title">ChatPilot</div>
+        <input id="cp-search" placeholder="Search prompts (⌘/Ctrl+K)" />
+        <button id="cp-settings-btn" title="Settings">⚙️</button> <button id="cp-dock-btn" title="Dock right">📌</button><button id="cp-expand" title="Expand / shrink">⤢</button><button id="cp-close" title="Close (Esc)">✕</button>
+      </header>
+      <section class="cp-toolbar">
+        <button id="cp-new-folder">New Folder</button>
+        <button id="cp-new-prompt">New Prompt</button>
+        <input id="cp-label-filter" placeholder="Filter by label..." />
+        <button id="cp-manage-labels">Labels</button>
+        <button id="cp-export">Export</button>
+        <button id="cp-pins">Pins</button>
+      </section>
+      <section id="cp-list"></section>
+      <footer class="cp-footer">Alt+P to toggle • Made for devs</footer>
+    </div>
+    <script type="module" src="./panel.js"></script>
+  
+    <div id="cp-modal" class="cp-modal" hidden>
+      <div class="cp-modal-dialog">
+        <div class="cp-modal-head">
+          <div class="title">Fill Variables</div>
+          <button id="cp-modal-close">✕</button>
+        </div>
+        <div class="cp-modal-body">
+          <form id="cp-modal-form"></form>
+        </div>
+        <div class="cp-modal-foot">
+          <button id="cp-modal-cancel">Cancel</button>
+          <button id="cp-modal-ok" class="primary">Insert</button>
+        </div>
+      </div>
+    </div>
+    <div id="cp-toast" class="cp-toast" hidden></div>
+    <div id="cp-labels-modal" class="cp-modal" hidden>
+      <div class="cp-modal-dialog cp-labels-dialog">
+        <div class="cp-modal-head">
+          <div class="title">Labels</div>
+          <button id="cp-labels-close">✕</button>
+        </div>
+        <div class="cp-modal-body">
+          <div class="cp-labels-editor">
+            <input id="cp-new-label" placeholder="Create label (press Enter)" />
+            <div id="cp-labels-list" class="cp-chips"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+    </div>
+    
+  
+  <div id="cp-pins-modal" class="cp-modal" hidden>
+    <div class="cp-modal-dialog cp-pins-dialog">
+      <div class="cp-modal-head">
+        <div class="title">Pins</div>
+        <button id="cp-pins-close">✕</button>
+      </div>
+      <div class="cp-modal-body">
+        <div class="cp-pins-toolbar">
+          <input id="cp-pins-search" placeholder="Search pins..." />
+          <select id="cp-pins-sort">
+            <option value="new">Newest</option>
+            <option value="fav">Favorites</option>
+          </select>
+        </div>
+        <div id="cp-pins-list" class="cp-pins-list"></div>
+      </div>
+      <div class="cp-modal-foot">
+        <button id="cp-pins-clear" title="Delete all pins">Clear all</button>
+        <button id="cp-pins-export" class="primary">Export pins</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings Modal -->
+  <div id="cp-settings-modal" class="cp-modal" hidden>
+    <div class="cp-modal-dialog cp-settings-dialog">
+      <div class="cp-modal-head">
+        <div class="title">Settings</div>
+        <button id="cp-settings-close">✕</button>
+      </div>
+      <div class="cp-modal-body settings">
+        <label>Theme
+          <select id="cp-set-theme">
+            <option value="auto">Auto (system)</option>
+            <option value="light">Light</option>
+            <option value="dark">Dark</option>
+          </select>
+        </label>
+        <label>Panel width (px)
+          <input id="cp-set-width" type="number" min="300" max="640" step="10" />
+        </label>
+        <label>Font size
+          <select id="cp-set-font">
+            <option value="normal">Normal</option>
+            <option value="small">Small</option>
+            <option value="large">Large</option>
+          </select>
+        </label>
+        <label class="row">
+          <input id="cp-set-compact" type="checkbox" /> Compact mode
+        </label>
+        <label class="row">
+          <input id="cp-set-launcher" type="checkbox" /> Show sticky launcher button
+        </label>
+      </div>
+      <div class="cp-modal-foot">
+        <button id="cp-settings-reset">Reset</button>
+        <button id="cp-settings-save" class="primary">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pins Modal (in case it wasn't injected earlier) -->
+  <div id="cp-pins-modal" class="cp-modal" hidden>
+    <div class="cp-modal-dialog cp-pins-dialog">
+      <div class="cp-modal-head">
+        <div class="title">Pins</div>
+        <button id="cp-pins-close">✕</button>
+      </div>
+      <div class="cp-modal-body">
+        <div class="cp-pins-toolbar">
+          <input id="cp-pins-search" placeholder="Search pins..." />
+          <select id="cp-pins-sort">
+            <option value="new">Newest</option>
+            <option value="fav">Favorites</option>
+          </select>
+        </div>
+        <div id="cp-pins-list" class="cp-pins-list"></div>
+      </div>
+      <div class="cp-modal-foot">
+        <button id="cp-pins-clear" title="Delete all pins">Clear all</button>
+        <button id="cp-pins-export" class="primary">Export pins</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+
+</html>
+
+</html>
+
+</html>
