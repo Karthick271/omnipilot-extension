@@ -1,0 +1,21 @@
+# Node / tooling
+node_modules/
+dist/
+build/
+.vscode/
+.idea/
+.DS_Store
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Output zips
+release/*.zip
+
+# Env / secrets
+.env
+.env.*
+secrets/

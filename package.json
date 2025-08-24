@@ -1,0 +1,9 @@
+{
+  "name": "chatpilot-extension",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "package": "bash scripts/package.sh"
+  },
+  "devDependencies": {}
+}
