@@ -21,12 +21,7 @@
     "https://claude.ai/*"
   ],
   "action": {
-    "default_title": "ChatPilot MVP",
-    "default_icon": {
-      "16": "icons/icon-off-16.png",
-      "48": "icons/icon-off-48.png",
-      "128": "icons/icon-off-128.png"
-    }
+    "default_popup": "popup.html"
   },
   "background": {
     "service_worker": "background.js",
@@ -68,6 +63,6 @@
     }
   ],
   "side_panel": {
-    "default_path": "sidepanel/index.html"
+    "default_path": "content/panel.html"
   }
 }
