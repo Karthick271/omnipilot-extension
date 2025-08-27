@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "ChatPilot MVP",
   "description": "Folders, prompts, pins & export for ChatGPT/Claude with a clean, original UI.",
-  "version": "0.1.0",
+  "version": "0.1.3",                   
   "icons": {
     "16": "icons/icon-16.png",
     "48": "icons/icon-48.png",
@@ -13,18 +13,20 @@
     "contextMenus",
     "offscreen",
     "scripting",
-    "storage"
+    "storage",
+    "sidePanel"
   ],
   "host_permissions": [
     "https://chat.openai.com/*",
     "https://chatgpt.com/*",
     "https://claude.ai/*"
   ],
- 
   "background": {
     "service_worker": "background.js",
     "type": "module"
   },
+  "action": { "default_title": "Open side panel" },
+
   "content_scripts": [
     {
       "matches": [
@@ -32,35 +34,24 @@
         "https://chatgpt.com/*",
         "https://claude.ai/*"
       ],
-      "js": [
-        "content/inject.js"
-      ],
-      "css": [
-        "styles/panel.css"
-      ],
+      "js": ["content/inject.js"],
+      "css": ["styles/panel.css"],
       "run_at": "document_idle"
     }
   ],
   "commands": {
     "toggle-panel": {
-      "suggested_key": {
-        "default": "Alt+P"
-      },
+      "suggested_key": { "default": "Alt+P" },
       "description": "Toggle ChatPilot panel"
     }
   },
   "web_accessible_resources": [
     {
-      "resources": [
-        "content/panel.html",
-        "styles/panel.css"
-      ],
-      "matches": [
-        "<all_urls>"
-      ]
+      "resources": ["content/panel.html", "styles/panel.css"],
+      "matches": ["<all_urls>"]
     }
   ],
   "side_panel": {
-    "default_path": "content/panel.html"
+    "default_path": "content/panel.html"  
   }
 }

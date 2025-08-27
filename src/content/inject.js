@@ -70,7 +70,7 @@ chrome.runtime.onMessage.addListener((msg) => {
 });
 
 // Auto-mount once for visibility; user can close with Esc or Alt+P
-ensurePanel(); try { chrome.runtime.sendMessage({type:'CP_PANEL_STATE', open:true}); } catch(e){}
+// ensurePanel(); try { chrome.runtime.sendMessage({type:'CP_PANEL_STATE', open:true}); } catch(e){}
 
 // Global key handling (Esc to close)
 addEventListener('keydown', (e) => {
