@@ -629,3 +629,92 @@ document.getElementById('cp-label-filter')?.addEventListener('input', async ()=>
   renderTree(t);
 });
 // ===== end addon =====
+// Simple draggable support for panel
+function makeDraggable(el) {
+  let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+  const header = el.querySelector(".panel-header");
+  (header || el).onmousedown = dragMouseDown;
+  function dragMouseDown(e) {
+    e = e || window.event;
+    e.preventDefault();
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    document.onmouseup = closeDragElement;
+    document.onmousemove = elementDrag;
+  }
+  function elementDrag(e) {
+    e = e || window.event;
+    e.preventDefault();
+    pos1 = pos3 - e.clientX;
+    pos2 = pos4 - e.clientY;
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    el.style.top = (el.offsetTop - pos2) + "px";
+    el.style.left = (el.offsetLeft - pos1) + "px";
+    el.style.position = "fixed";
+  }
+  function closeDragElement() {
+    document.onmouseup = null;
+    document.onmousemove = null;
+  }
+}
+document.addEventListener("DOMContentLoaded", () => {
+  const panel = document.querySelector(".panel-container");
+  if (panel) makeDraggable(panel);
+});
+
+
+// Force panel to stay at 100% zoom regardless of Chrome zoom
+document.addEventListener("DOMContentLoaded", () => {
+  document.body.style.zoom = "100%";
+  document.body.style.transform = "scale(1)";
+  document.body.style.transformOrigin = "0 0";
+});
+
+
+// DPI-adaptive scaling to keep panel consistent across monitors
+function fixDPI() {
+  const scale = 1 / window.devicePixelRatio;
+  document.body.style.transform = `scale(${scale})`;
+  document.body.style.transformOrigin = "0 0";
+  document.body.style.width = (100 * window.devicePixelRatio) + "%";
+  document.body.style.height = (100 * window.devicePixelRatio) + "%";
+}
+window.addEventListener("resize", fixDPI);
+window.addEventListener("load", fixDPI);
+document.addEventListener("DOMContentLoaded", fixDPI);
+
+
+// Hybrid DPI scaling fix (handles 100% zoom separately)
+function hybridFixDPI() {
+  let dpr = window.devicePixelRatio;
+
+  if (dpr === 1) {
+    // Native 100% zoom → render normally
+    document.body.style.transform = "none";
+    document.body.style.width = "100%";
+    document.body.style.height = "100%";
+  } else {
+    // Any other zoom/DPI → compensate with scaling
+    const scale = 1 / dpr;
+    document.body.style.transform = `scale(${scale})`;
+    document.body.style.transformOrigin = "0 0";
+    document.body.style.width = (100 * dpr) + "%";
+    document.body.style.height = (100 * dpr) + "%";
+  }
+}
+
+window.addEventListener("resize", hybridFixDPI);
+window.addEventListener("load", hybridFixDPI);
+document.addEventListener("DOMContentLoaded", hybridFixDPI);
+
+
+// JS fallback to auto-correct header/search collapse at 100% zoom
+function fixHeaderLayout() {
+  const header = document.querySelector(".panel-header");
+  const input = header?.querySelector("input");
+  if (input && input.offsetWidth === 0) {
+    input.style.minWidth = "1px"; // force reflow
+  }
+}
+new ResizeObserver(fixHeaderLayout).observe(document.body);

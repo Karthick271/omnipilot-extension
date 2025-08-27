@@ -12,7 +12,368 @@
 .cp-header{flex:0 0 auto;position:sticky;top:0;background:#fff;border-bottom:1px solid #e5e7eb;z-index:2}
 #cp-list{flex:1 1 auto;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding-bottom:16px}
 /* prevent double scroll */
-html, body{height:100%;margin:0;overflow:hidden}
+html, body {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+ body{height:100%;margin:0;overflow:hidden}
 /* enterprise look tweaks */
 .cp-card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.04)}
 button, .cp-btn{cursor:pointer}
+
+/* Ensure full height and flex layout for zoom stability */
+html, body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+.panel-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+.panel-header {
+  flex: 0 0 auto;
+  padding: 8px;
+  background: #f5f5f5;
+  border-bottom: 1px solid #ddd;
+  cursor: move;
+  -webkit-app-region: drag;
+}
+.panel-body {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+/* Force extension panel to always render at 100% zoom */
+html, body {
+  zoom: 100% !important;
+  transform: scale(1) !important;
+  transform-origin: 0 0 !important;
+}
+
+/* Flexbox fix for header/search breaking at 100% zoom */
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+}
+.panel-header input[type="text"],
+.search-section input {
+  flex: 1 1 auto;
+  min-width: 0; /* prevent overflow/collapse at 100% zoom */
+  box-sizing: border-box;
+}
+
+/* Hybrid fix for Chrome 100% zoom collapse */
+.panel-header input[type="text"],
+.search-section input {
+  flex: 1 1 auto;
+  min-width: 0.1px; /* fractional pixel safeguard */
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Refined cp-header flexbox fix */
+.cp-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.cp-header > * {
+  flex-shrink: 0; /* prevent collapse at 100% zoom */
+}
+.cp-header input[type="text"] {
+  flex-grow: 1;
+  min-width: 0; /* avoid overflow */
+  box-sizing: border-box;
+}
+
+/* Grid-based fix for cp-header to avoid flex collapse at 100% zoom */
+.cp-header {
+  display: grid;
+  grid-template-columns: auto 1fr auto; /* icon | search | buttons */
+  align-items: center;
+  gap: 8px;
+}
+.cp-header input[type="text"] {
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Fix dropdown/context menu styling */
+.dropdown-menu, 
+.context-menu {
+  background: #1e1e2f;       /* dark theme background */
+  color: #fff;               /* visible text */
+  border: 1px solid #333;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  padding: 4px 0;
+  z-index: 9999;
+}
+.dropdown-menu li, 
+.context-menu-item {
+  padding: 6px 12px;
+  cursor: pointer;
+}
+.dropdown-menu li:hover, 
+.context-menu-item:hover {
+  background: #2a2a40;       /* hover state */
+  color: #fff;
+}
+
+/* Strong global dropdown/context menu fix */
+.cp-root .dropdown-menu,
+.cp-root .context-menu,
+.cp-root [role="menu"] {
+  background: #1e1e2f !important;
+  color: #fff !important;
+  border: 1px solid #333 !important;
+  border-radius: 6px !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3) !important;
+  padding: 4px 0 !important;
+  z-index: 9999 !important;
+}
+
+.cp-root .dropdown-menu li,
+.cp-root .context-menu-item,
+.cp-root [role="menuitem"] {
+  padding: 6px 12px !important;
+  cursor: pointer !important;
+}
+
+.cp-root .dropdown-menu li:hover,
+.cp-root .context-menu-item:hover,
+.cp-root [role="menuitem"]:hover {
+  background: #2a2a40 !important;
+  color: #fff !important;
+}
+
+/* Fix for custom cp-menu dropdowns */
+.cp-menu {
+  background: #1e1e2f !important;
+  color: #fff !important;
+  border: 1px solid #333 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3) !important;
+  padding: 4px 0 !important;
+  z-index: 9999 !important;
+  min-width: 160px !important;
+}
+.cp-menu button,
+.cp-menu div,
+.cp-menu [role="menuitem"] {
+  background: transparent !important;
+  color: #fff !important;
+  padding: 6px 12px !important;
+  border: none !important;
+  text-align: left !important;
+  width: 100% !important;
+  cursor: pointer !important;
+}
+.cp-menu button:hover,
+.cp-menu div:hover,
+.cp-menu [role="menuitem"]:hover {
+  background: #2a2a40 !important;
+  color: #fff !important;
+}
+
+/* Fix for cp-prompt .body with theme awareness */
+html[data-theme="light"] .cp-prompt .body {
+  background-color: #fff !important;
+  color: #222 !important;
+  white-space: pre-wrap !important;
+  border-radius: 6px !important;
+  padding: 6px 10px !important;
+}
+
+html[data-theme="dark"] .cp-prompt .body {
+  background-color: #1e1e2f !important;
+  color: #fff !important;
+  white-space: pre-wrap !important;
+  border-radius: 6px !important;
+  padding: 6px 10px !important;
+}
+
+/* Polished theme-aware styling for cp-prompt body */
+html[data-theme="light"] .cp-prompt .body {
+  background-color: #f8f8f8 !important;
+  color: #222 !important;
+  font-size: 14px !important;
+  line-height: 1.5 !important;
+  opacity: 1 !important;
+  padding: 8px 12px !important;
+  border-radius: 6px !important;
+  white-space: pre-wrap !important;
+}
+
+html[data-theme="dark"] .cp-prompt .body {
+  background-color: rgba(30,30,47,0.95) !important;
+  color: #fff !important;
+  font-size: 14px !important;
+  line-height: 1.5 !important;
+  opacity: 1 !important;
+  padding: 8px 12px !important;
+  border-radius: 6px !important;
+  white-space: pre-wrap !important;
+}
+
+/* Ultra-strong override for cp-prompt .body */
+#cp-root .cp-prompt .body {
+  background-color: rgba(30,30,47,0.95) !important;
+  color: #fff !important;
+  font-size: 14px !important;
+  line-height: 1.5 !important;
+  opacity: 1 !important;
+  padding: 8px 12px !important;
+  border-radius: 6px !important;
+  white-space: pre-wrap !important;
+}
+
+html[data-theme="light"] #cp-root .cp-prompt .body {
+  background-color: #f8f8f8 !important;
+  color: #222 !important;
+}
+
+html[data-theme="dark"] #cp-root .cp-prompt .body {
+  background-color: rgba(30,30,47,0.95) !important;
+  color: #fff !important;
+}
+
+/* Fix for Pins Modal dialog */
+#cp-root .cp-pins-modal .cp-modal-dialog {
+  background-color: #1e1e2f !important;
+  color: #fff !important;
+  border: 1px solid #333 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4) !important;
+  padding: 10px !important;
+  z-index: 10000 !important;
+}
+
+#cp-root .cp-pins-modal .cp-modal-dialog .title,
+#cp-root .cp-pins-modal .cp-modal-dialog .meta {
+  color: #ccc !important;
+  font-size: 13px !important;
+}
+
+#cp-root .cp-pins-modal .cp-modal-dialog .cp-pin {
+  background: rgba(255,255,255,0.05) !important;
+  border-radius: 6px !important;
+  padding: 6px 10px !important;
+  margin-bottom: 6px !important;
+}
+
+#cp-root .cp-pins-modal .cp-modal-dialog .cp-pin:hover {
+  background: rgba(255,255,255,0.1) !important;
+}
+
+/* Fix for cp-pin .body inside Pins Modal */
+#cp-root .cp-pins-modal .cp-modal-dialog .cp-pin .body {
+  color: #fff !important;   /* white text for dark background */
+  font-size: 13px !important;
+  line-height: 1.4 !important;
+  white-space: pre-wrap !important;
+}
+
+html[data-theme="light"] #cp-root .cp-pins-modal .cp-modal-dialog .cp-pin .body {
+  color: #222 !important;   /* dark text for light theme */
+}
+
+html[data-theme="dark"] #cp-root .cp-pins-modal .cp-modal-dialog .cp-pin .body {
+  color: #fff !important;   /* white text for dark theme */
+}
+
+/* Fix titles inside pins modal and pin cards */
+#cp-root .cp-pin .title,
+#cp-root .cp-modal-head .title {
+  font-weight: 600 !important;
+}
+
+html[data-theme="dark"] #cp-root .cp-pin .title,
+html[data-theme="dark"] #cp-root .cp-modal-head .title {
+  color: #fff !important;   /* white for dark mode */
+}
+
+html[data-theme="light"] #cp-root .cp-pin .title,
+html[data-theme="light"] #cp-root .cp-modal-head .title {
+  color: #111 !important;   /* near black for light mode */
+}
+
+/* Ultra-strong fix for pin and modal titles */
+#cp-root .cp-pin .title,
+#cp-root .cp-modal-head .title {
+  font-weight: 600 !important;
+}
+
+html[data-theme="dark"] #cp-root .cp-pin .title,
+html[data-theme="dark"] #cp-root .cp-modal-head .title {
+  color: #fff !important;
+}
+
+html[data-theme="light"] #cp-root .cp-pin .title,
+html[data-theme="light"] #cp-root .cp-modal-head .title {
+  color: #111 !important;
+}
+
+/* Fix for cp-pin .body with theme awareness */
+#cp-root .cp-pin .body {
+  font-size: 14px !important;
+  line-height: 1.5 !important;
+  padding: 6px 10px !important;
+  border-radius: 4px !important;
+  white-space: pre-wrap !important;
+}
+
+html[data-theme="dark"] #cp-root .cp-pin .body {
+  background: rgba(30,30,47,0.95) !important;
+  color: #fff !important;
+}
+
+html[data-theme="light"] #cp-root .cp-pin .body {
+  background: #f8f8f8 !important;
+  color: #222 !important;
+}
+
+/* Ultra-strong fix for cp-pin .body */
+#cp-root .cp-pin .body {
+  font-size: 14px !important;
+  line-height: 1.5 !important;
+  padding: 8px 10px !important;
+  border-radius: 6px !important;
+  white-space: pre-wrap !important;
+  border: none !important;
+}
+
+html[data-theme="dark"] #cp-root .cp-pin .body {
+  background: rgba(30,30,47,0.95) !important;
+  color: #fff !important;
+}
+
+html[data-theme="light"] #cp-root .cp-pin .body {
+  background: #f8f8f8 !important;
+  color: #222 !important;
+}
+
+/* Direct fix for pin title and modal head */
+#cp-root .cp-pin .title {
+    font-weight: 600 !important;
+    font-size: 14px !important;
+    color: white !important;
+}
+
+#cp-root .cp-modal-head {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 12px 14px !important;
+    background: #0f1724 !important;
+    border-bottom: 1px solid #1e2636 !important;
+    color: white !important;
+}
